@@ -9,7 +9,21 @@ require("./config/db");
 const app = express();
 
 app.use(logger("dev"));
-app.use(cors());
+
+const allowedOrigins = [
+  "https://fullstack-sern-hhzk.onrender.com",
+  "http://localhost:5173",
+  "http://localhost:4173",
+  "http://localhost:3000",
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error("CORS not allowed: " + origin));
+  },
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
